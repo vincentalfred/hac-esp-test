@@ -20,7 +20,8 @@ void setupWifi(){
 
 	// Serial.print("\nConnecting to "); Serial.println(ssid);
   char s[50]; sprintf(s, "connecting to %s", ssid);
-	if (DEBUG) lcdPrint(s); else Serial.println(s);
+	if (DEBUG) lcdPrint(s);
+	else Serial.println(s);
 
   lcdPrint(s);
 	WiFi.begin(ssid, password);
