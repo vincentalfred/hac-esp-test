@@ -14,9 +14,7 @@ void loop(){
  char carduid[20];
  if (getCardUID(carduid) && strcmp(carduid, cur_carduid) != 0) {
    strcpy(cur_carduid, carduid);
-   Serial.print("Got Card UID! = ");
-   Serial.println(carduid);
-   Serial.print("cur = "); Serial.println(cur_carduid);
+   printDebug(carduid);
    lcd.clear();
    lcd.setCursor(0, 0);
    lcd.print(carduid);

@@ -3,7 +3,7 @@
 
 const char* ssid        = "Android AP";
 const char* password    = "abcdefgh";
-const char* mqtt_server = "192.168.3.155";
+const char* mqtt_server = "192.168.3.157";
 const int   mqtt_port   = 1883;
 
 WiFiClient espClient;
@@ -19,18 +19,15 @@ void setupWifi(){
 	// We start by connecting to a WiFi network
 
 	// Serial.print("\nConnecting to "); Serial.println(ssid);
-  char s[50]; sprintf(s, "connecting to %s", ssid);
-	if (DEBUG) lcdPrint(s);
-	else Serial.println(s);
+  char debugMessage[50]; sprintf(debugMessage, "connecting to %s", ssid);
+	printDebug(debugMessage);
 
-  lcdPrint(s);
 	WiFi.begin(ssid, password);
 	while (WiFi.status() != WL_CONNECTED) {
 		delay(500);
-		Serial.print(".");
 	}
-	Serial.print("\nWiFi connected - ESP IP address: ");
-	Serial.println(WiFi.localIP());
+
+	printDebug("WiFi connected!");
 }
 
 void setupMQTT(){
@@ -40,11 +37,10 @@ void setupMQTT(){
 }
 
 void callback(String topic, byte* message, unsigned int length) {
-  Serial.print("Message arrived on topic: ");
-  Serial.print(topic);
+  Serial.print("Message arrived on topic: "); Serial.print(topic);
   Serial.print(". Message: ");
-  String messageTemp;
 
+  String messageTemp;
   for (int i = 0; i < length; i++) {
     Serial.print((char)message[i]);
     messageTemp += (char)message[i];
@@ -64,17 +60,19 @@ void callback(String topic, byte* message, unsigned int length) {
 void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
+		printDebug("Attempting MQTT connection...");
 
     if (client.connect("ESP8266Client")) {
-      Serial.println("connected");
+      printDebug("MQTT Connected!");
       // Subscribe or resubscribe to a topic
       // You can subscribe to more topics (to control more LEDs in this example)
-      client.subscribe("led");
+
+			char* topic; sprintf(topic, "%d/command/#", machine_id);
+      client.subscribe(topic);
     } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
+			char debugMessage[105];
+			sprintf(debugMessage, "failed, rc=%d. Try again in 5s", client.state());
+			printDebug(debugMessage);
       // Wait 5 seconds before retrying
       delay(5000);
     }
