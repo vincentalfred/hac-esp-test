@@ -21,4 +21,6 @@ void loop(){
         String topic = String(machine_id) + "/state/carduid";
         client.publish(topic, carduid);
     }
+
+    // print to LCD time and usage
 }

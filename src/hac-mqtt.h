@@ -3,7 +3,7 @@
 
 const char* ssid        = "Android AP";
 const char* password    = "abcdefgh";
-const char* mqtt_server = "192.168.3.157";
+const char* mqtt_server = "192.168.3.154";
 const int   mqtt_port   = 1883;
 
 WiFiClient net;
@@ -22,16 +22,30 @@ void connect() {
 
 	printDebug("MQTT connected!");
 
-	// char *topic; sprintf(topic, "%d/command/#", machine_id);
 	String topic = String(machine_id) + "/command/#";
   	client.subscribe(topic);
-	printDebug("sub to "+ topic);
+	printDebug("sub to " + topic);
 }
 
 void messageReceived(String &topic, String &payload) {
 	String debugMessage = "incoming " + payload;
 	Serial.println(debugMessage);
 	printDebug(debugMessage);
+
+	/*
+	String command = String(machine_id) + "/command/ssr";
+	if (topic == command) {
+		if (payload == "0") digitalWrite(SSR_PIN, LOW);
+		else {
+
+		}
+	}
+	command = String(machine_id) + "/command/time";
+	if (topic == command) {
+		timeLeft = payload;
+	}
+	*/
+
 }
 
 void setupMQTT() {
