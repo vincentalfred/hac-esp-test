@@ -1,4 +1,4 @@
-#include<PZEM004T>
+#include"PZEM004T.h"
 /*
    An example on how to use ESP8266 hardware serial with PZEM004T
    Note: ESP8266 UART0 pins GPIO1 (TX) and GPIO3 (RX) are usually connected
@@ -16,7 +16,7 @@ IPAddress ip(192,168,3,157);
 
 bool pzemrdy = false;
 
-void setup() {
+void setupPZEM() {
    hwserial.swap();           // (optionally) swap hw_serial pins to gpio13(rx),15(tx)
    Serial1.begin(115200);     /* Since UART0 is occupied with PZEM004T, we use UART1 to output data to serial monitor
                                  UART1 uses hwserial at pin GPIO2
@@ -26,24 +26,4 @@ void setup() {
       pzemrdy = pzem.setAddress(ip);
       delay(1000);
    }
-}
-
-void loop() {
-
-  float v = pzem.voltage(ip);
-  if (v < 0.0) v = 0.0;
-   Serial1.print(v);Serial1.print("V; ");
-
-  float i = pzem.current(ip);
-   if(i >= 0.0){ Serial1.print(i);Serial1.print("A; "); }
-
-  float p = pzem.power(ip);
-   if(p >= 0.0){ Serial1.print(p);Serial1.print("W; "); }
-
-  float e = pzem.energy(ip);
-   if(e >= 0.0){ Serial1.print(e);Serial1.print("Wh; "); }
-
-  Serial1.println();
-
-  delay(1000);
 }

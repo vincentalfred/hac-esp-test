@@ -6,6 +6,7 @@ void setup() {
     setupLCD();
     setupMQTT();
     setupRFID();
+    setupPZEM();
 }
 
 char cur_carduid[20] = {};
@@ -21,4 +22,25 @@ void loop(){
         String topic = String(machine_id) + "/state/carduid";
         client.publish(topic, carduid);
     }
+
+    if (SSR_PIN == HIGH){
+        float v = pzem.voltage(ip);
+        if (v < 0.0) v = 0.0;
+         Serial1.print(v);Serial1.print("V; ");
+
+        float i = pzem.current(ip);
+         if(i >= 0.0){ Serial1.print(i);Serial1.print("A; "); }
+
+        float p = pzem.power(ip);
+         if(p >= 0.0){ Serial1.print(p);Serial1.print("W; "); }
+
+        float e = pzem.energy(ip);
+         if(e >= 0.0){ Serial1.print(e);Serial1.print("Wh; "); }
+        // String topic = String(pzem.energy(ip)) + "/state/energy";
+        // client.publish(topic, pzem.energy(ip));
+        Serial1.println();
+
+
+      }
+    delay(1000);
 }
