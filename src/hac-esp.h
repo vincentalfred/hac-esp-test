@@ -15,6 +15,7 @@ void printDebug(String debugMessage);
 #include "hac-lcd.h"
 #include "hac-mqtt.h"
 #include "hac-rfid.h"
+#include "hac-pzem004t.h"
 
 void printDebug(String debugMessage) {
     if (!DEBUG) return;
