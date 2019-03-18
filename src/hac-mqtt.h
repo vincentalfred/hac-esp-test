@@ -30,8 +30,14 @@ void connect() {
 
 void messageReceived(String &topic, String &payload) {
 	String debugMessage = "incoming " + payload;
-	Serial.println(debugMessage);
+	//Serial.println(debugMessage);
 	printDebug(debugMessage);
+	String topicSSR = String(machine_id) + "/command/ssr";
+		if (topicSSR == topic){
+			if (payload == "1"){
+				activate	= 1; 
+			}
+		}
 }
 
 void setupMQTT() {
