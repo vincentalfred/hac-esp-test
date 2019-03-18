@@ -33,3 +33,23 @@ void lcdPrint(String s) {
         lcd.print(s);
     }
 }
+
+void welcomeScreen(){
+  lcd.setCursor(0, 0); lcd.print("Welcome");
+  lcd.setCursor(0, 1); lcd.print("I'Am Online");
+}
+
+void endScreen(){
+  lcd.setCursor(0, 0); lcd.print("Session Ended");
+  lcd.setCursor(0, 1); lcd.print("Thank You");
+}
+
+void deniedScreen() {
+  lcd.setCursor(0, 0); lcd.print("Access Denied");
+  lcd.setCursor(0, 1); lcd.print("Contact Admin");
+}
+
+void certifiedScreen(String timeLeft, String powerMeter) {
+  lcd.setCursor(0, 0); lcd.print(timeLeft);
+  lcd.setCursor(0, 1); lcd.print(powerMeter);
+}

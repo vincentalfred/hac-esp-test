@@ -29,22 +29,15 @@ void connect() {
 
 void messageReceived(String &topic, String &payload) {
 	String debugMessage = "incoming " + payload;
-	Serial.println(debugMessage);
+	//Serial.println(debugMessage);
 	printDebug(debugMessage);
 
-	/*
-	String command = String(machine_id) + "/command/ssr";
-	if (topic == command) {
-		if (payload == "0") digitalWrite(SSR_PIN, LOW);
-		else {
-
+	String topicSSR = String(machine_id) + "/command/ssr";
+		if (topicSSR == topic){
+			if (payload == "1"){
+				activate	= 1; 
+			}
 		}
-	}
-	command = String(machine_id) + "/command/time";
-	if (topic == command) {
-		timeLeft = payload;
-	}
-	*/
 
 }
 

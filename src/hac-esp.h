@@ -5,6 +5,7 @@ const int machine_id = 1;
 const char* machine_name = "machine1";
 const bool DEBUG = true;
 const bool LCDDEBUG = true;
+bool activate = 0; // value from cloud to ack SSR pin D8
 
 #define MFRC522_SS_PIN  D4
 #define MFRC522_RST_PIN D3
@@ -15,6 +16,7 @@ void printDebug(String debugMessage);
 #include "hac-lcd.h"
 #include "hac-mqtt.h"
 #include "hac-rfid.h"
+#include "hac-pzem004t.h"
 
 void printDebug(String debugMessage) {
     if (!DEBUG) return;
