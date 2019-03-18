@@ -23,6 +23,7 @@ void loop(){
         printDebug(carduid);
         String topic = String(machine_id) + "/state/carduid";
         client.publish(topic, carduid);
+
         }
 
    if (activate == 1 ){
@@ -36,5 +37,6 @@ void loop(){
         client.publish(topicEnergy, energys);
         certifiedScreen(carduid, energys);
       }
+
 
 }
