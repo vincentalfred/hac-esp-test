@@ -6,12 +6,16 @@ const char* machine_name = "machine1";
 const bool DEBUG = true;
 const bool LCDDEBUG = true;
 bool activate = 0; // value from cloud to ack SSR pin D8
+unsigned long currentMillis, startMillis, interval = 1800000, previousMillis;
 
 #define MFRC522_SS_PIN  D4
 #define MFRC522_RST_PIN D3
 #define SSR_PIN         D8
+#define BUTTON_1        D0
 
 void printDebug(String debugMessage);
+
+
 
 #include "hac-lcd.h"
 #include "hac-mqtt.h"

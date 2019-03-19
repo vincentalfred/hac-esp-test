@@ -32,10 +32,23 @@ void messageReceived(String &topic, String &payload) {
 	//Serial.println(debugMessage);
 	printDebug(debugMessage);
 
-	String topicSSR = String(machine_id) + "/command/ssr";
-		if (topicSSR == topic){
+	String topicRef = String(machine_id) + "/command/action";
+		if (topicRef == topic){
 			if (payload == "1"){
-				activate	= 1; 
+				activate	= 1;
+				startMillis = millis();
+			}
+			else if (payload == "2"){
+				lcdPrint("User Not Certified");
+				delay(2500);
+				welcomeScreen();
+			}
+			else if (payload == "0"){
+				activate  = 0;
+			}
+			else if (payload == "3"){
+				lcdPrint("Unknown User"); 
+				delay (2500);
 			}
 		}
 

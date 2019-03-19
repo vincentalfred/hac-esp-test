@@ -26,31 +26,20 @@ void setupPZEM() {
 void powerDisplay(){
 	  float v = pzem.voltage(ip);
     if (v < 0.0) v = 0.0;
-    Serial.print(v);Serial.print("V; ");
-    char buffer1[4];
-    String volt = dtostrf(v, 3 , 1, buffer1);
-    lcd.setCursor(0, 0); lcd.print("V:"+volt);
+
 
     float i = pzem.current(ip);
     if(i >= 0.0){ Serial.print(i);Serial.print("A; "); }
-    char buffer2[4];
-    String currents = dtostrf(i, 2, 2, buffer2);
-    lcd.setCursor(8, 0); lcd.print("A:"+currents);
+
 
     float p = pzem.power(ip);
     if(p >= 0.0){ Serial.print(p);Serial.print("W; "); }
-    char buffer3[4];
-    String powers = dtostrf(p, 4, 0, buffer3);
-    lcd.setCursor(0, 1); lcd.print("W:"+powers);
+
 
     float e = pzem.energy(ip);
     if(e >= 0.0){ Serial.print(e);Serial.print("Wh; "); }
     char buffer4[4];
     String energys = dtostrf(e , 4, 0, buffer4);
     lcd.setCursor(8, 1); lcd.print("Wh:"+energys);
-
-    Serial.println();
-
-  	lcd.clear();
 
 }

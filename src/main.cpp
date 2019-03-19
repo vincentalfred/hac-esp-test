@@ -7,7 +7,7 @@ void setup() {
     setupMQTT();
     setupRFID();
     setupPZEM();
-    welcomeScreen(); 
+    welcomeScreen();
 }
 
 char cur_carduid[20] = {};
@@ -28,15 +28,22 @@ void loop(){
 
    if (activate == 1 ){
         digitalWrite(SSR_PIN, HIGH);
+        currentMillis = millis();
+        int elapseTime = (currentMillis - startMillis)/60000;
+        if (currentMillis - startMillis <= interval){
+          float e = pzem.energy(ip);
+          char buffer4[4];
+          String energys = dtostrf(e , 4, 0, buffer4);
+          certifiedScreen(String(elapseTime), energys);
+        }
+   else if (activate == 0 || elapseTime == interval){
         float e = pzem.energy(ip);
-        if(e >= 0.0){ Serial.print(e);Serial.print("Wh; "); }
         char buffer4[4];
         String energys = dtostrf(e , 4, 0, buffer4);
-        lcd.setCursor(8, 1); lcd.print("Wh:"+energys);
         String topicEnergy = String(machine_id) + "/state/carduid";
         client.publish(topicEnergy, energys);
-        certifiedScreen(carduid, energys);
+        digitalWrite(SSR_PIN, LOW);
+        endScreen();
+        }
       }
-
-
 }
