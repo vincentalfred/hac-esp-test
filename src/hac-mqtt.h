@@ -29,12 +29,14 @@ void connect() {
 
 void messageReceived(String &topic, String &payload) {
 	String debugMessage = "incoming " + payload;
-	//Serial.println(debugMessage);
 	printDebug(debugMessage);
 
 	String topicRef = String(machine_id) + "/command/action";
 		if (topicRef == topic){
-			if (payload == "1"){
+			if (payload == "0"){
+				activate  = 0;
+			}
+			else if (payload == "1"){
 				activate	= 1;
 				startMillis = millis();
 			}
@@ -43,15 +45,11 @@ void messageReceived(String &topic, String &payload) {
 				delay(2500);
 				welcomeScreen();
 			}
-			else if (payload == "0"){
-				activate  = 0;
-			}
 			else if (payload == "3"){
-				lcdPrint("Unknown User"); 
+				lcdPrint("Unknown User");
 				delay (2500);
 			}
 		}
-
 }
 
 void setupMQTT() {

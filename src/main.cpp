@@ -2,7 +2,7 @@
 #include "hac-esp.h"
 
 void setup() {
-    //Serial.begin(9600);
+    if (DEBUG && !LCDDEBUG) Serial.begin(9600);
     setupLCD();
     setupMQTT();
     setupRFID();
@@ -38,7 +38,7 @@ void loop(){
         }
    else if (activate == 0 || elapseTime == interval){
         float e = pzem.energy(ip);
-        char buffer4[4];
+        char buffer4[4];,
         String energys = dtostrf(e , 4, 0, buffer4);
         String topicEnergy = String(machine_id) + "/state/carduid";
         client.publish(topicEnergy, energys);
