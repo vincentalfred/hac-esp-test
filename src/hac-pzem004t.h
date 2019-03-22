@@ -41,5 +41,4 @@ void powerDisplay(){
     char buffer4[4];
     String energys = dtostrf(e , 4, 0, buffer4);
     lcd.setCursor(8, 1); lcd.print("Wh:"+energys);
-
 }
