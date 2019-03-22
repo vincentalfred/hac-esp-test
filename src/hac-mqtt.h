@@ -32,26 +32,26 @@ void messageReceived(String &topic, String &payload) {
 	printDebug(debugMessage);
 
 	String topicRef = String(machine_id) + "/command/action";
-		if (topicRef == topic){
-			if (payload == "0"){
-		    activate  = 0;
-			}
-			else if (payload == "1"){
-        lcdPrint("Starting New Session");
-			  activate	= 1;
-			  startMillis = millis();
-			}
-			else if (payload == "2"){
-				lcdPrint("User Not Certified");
-				delay(2500);
-				welcomeScreen();
-			}
-			else if (payload == "3"){
-				lcdPrint("Unknown User    Contact Admin");
-				delay (2500);
-				welcomeScreen(); 
-			}
+	if (topicRef == topic){
+		if (payload == "0") {
+	    	activate = 0;
 		}
+		else if (payload == "1"){
+			lcdPrint("Starting New Session");
+			activate	= 1;
+			startMillis = millis();
+		}
+		else if (payload == "2"){
+			deniedScreen();
+			delay(2500);
+			welcomeScreen();
+		}
+		else if (payload == "3"){
+			unknownCardScreen();
+			delay (2500);
+			welcomeScreen();
+		}
+	}
 }
 
 void setupMQTT() {
