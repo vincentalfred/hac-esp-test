@@ -34,11 +34,12 @@ void messageReceived(String &topic, String &payload) {
 	String topicRef = String(machine_id) + "/command/action";
 		if (topicRef == topic){
 			if (payload == "0"){
-				activate  = 0;
+		    activate  = 0;
 			}
 			else if (payload == "1"){
-				activate	= 1;
-				startMillis = millis();
+        lcdPrint("Starting New Session");
+			  activate	= 1;
+			  startMillis = millis();
 			}
 			else if (payload == "2"){
 				lcdPrint("User Not Certified");
@@ -46,8 +47,9 @@ void messageReceived(String &topic, String &payload) {
 				welcomeScreen();
 			}
 			else if (payload == "3"){
-				lcdPrint("Unknown User");
+				lcdPrint("Unknown User    Contact Admin");
 				delay (2500);
+				welcomeScreen(); 
 			}
 		}
 }

@@ -35,15 +35,20 @@ void loop(){
           char buffer4[4];
           String energys = dtostrf(e , 4, 0, buffer4);
           certifiedScreen(String(elapseTime), energys);
+          if((currentMillis - startMillis)%60000 == 0){
+            String topicEnergy = String(machine_id) + "/state/usage";
+            client.publish(topicEnergy, energys);
+          }
         }
    else if (activate == 0 || elapseTime == interval){
         float e = pzem.energy(ip);
         char buffer4[4];,
         String energys = dtostrf(e , 4, 0, buffer4);
-        String topicEnergy = String(machine_id) + "/state/carduid";
+        String topicEnergy = String(machine_id) + "/state/stop";
         client.publish(topicEnergy, energys);
         digitalWrite(SSR_PIN, LOW);
         endScreen();
         }
       }
+
 }
