@@ -7,42 +7,41 @@ void setup() {
 		setupMQTT();
 		setupRFID();
 		setupPZEM();
-		welcomeScreen();
 }
 
 char cur_carduid[20] = {};
-char carduid[20];
-
 
 void loop(){
 		client.loop();
 		if (!client.connected()) connect();
 
+		char carduid[20];
 		if (activate == 0) {
-			if (getCardUID(carduid)) {
-					strcpy(cur_carduid, carduid);
-					printDebug(carduid);
-					String topic = String(machine_id) + "/state/carduid";
-					client.publish(topic, carduid);
-
-					}
+			welcomeScreen();
+			if (getCardUID(carduid) && strcmp(carduid, cur_carduid) != 0) {
+				strcpy(cur_carduid, carduid);
+				printDebug(carduid);
+				String topic = String(machine_id) + "/state/carduid";
+				client.publish(topic, carduid);
+			}
 		}
 		 else if (activate == 1 ){
 			digitalWrite(SSR_PIN, HIGH);
 			currentMillis = millis();
 			int elapseTime = (currentMillis - startMillis)/60000;
-			int remainingTime = 30 - elapseTime;
+			int remainingTime = interval/60000 - elapseTime;
 			if (currentMillis - startMillis < interval){
-				float e = pzem.energy(ip);
+				float e = pzem.energy(ip) - startEnergy;
 				char buffer4[4];
 				String energys = dtostrf(e , 4, 0, buffer4);
 				certifiedScreen(String(remainingTime), energys);
-				if((currentMillis - startMillis)%60000 == 0){
+				if(currentMillis - minuteMillis >= 60000){
 					String topicEnergy = String(machine_id) + "/state/usage";
 					client.publish(topicEnergy, energys);
+					minuteMillis = currentMillis;
 				}
 				if (remainingTime <= 3){
-					lcdBlink = 1; lcdMillis = currentMillis;
+					lcdBlink = 1;
 					if (getCardUID(carduid) && strcmp(carduid, cur_carduid) == 0){
 						lcdBlink = 0;
 						startMillis = currentMillis;
@@ -52,14 +51,17 @@ void loop(){
 
 			int stopButton = digitalRead(D0);
 			if (currentMillis - startMillis >= interval || stopButton == 1){
-				float e = pzem.energy(ip);
+				float e = pzem.energy(ip) - startEnergy;
 				char buffer4[4];
 				String energys = dtostrf(e , 4, 0, buffer4);
 				String topicEnergy = String(machine_id) + "/state/stop";
 				client.publish(topicEnergy, energys);
 				digitalWrite(SSR_PIN, LOW);
 				activate = 0;
+				lcdBlink = 0;
+				cur_carduid[0]='\0';
 				endScreen();
+				delay(2500);
 			}
 			if (lcdBlink == 1 && currentMillis - lcdMillis >= 1000){
 				lcdBacklight = 255 - lcdBacklight;

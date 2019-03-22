@@ -40,6 +40,8 @@ void messageReceived(String &topic, String &payload) {
 			lcdPrint("Starting New Session");
 			activate	= 1;
 			startMillis = millis();
+			minuteMillis = startMillis;
+			startEnergy = pzem.energy(ip);
 		}
 		else if (payload == "2"){
 			deniedScreen();

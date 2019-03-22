@@ -55,6 +55,6 @@ void unknownCardScreen() {
 }
 
 void certifiedScreen(String timeLeft, String powerMeter) {
-  lcd.setCursor(0, 0); lcd.print(timeLeft);
-  lcd.setCursor(0, 1); lcd.print(powerMeter);
+  lcd.setCursor(0, 0); lcd.print("TimeLeft: " + timeLeft + "Min");
+  lcd.setCursor(0, 1); lcd.print("Energy(Wh):" + powerMeter);
 }
