@@ -18,7 +18,6 @@ bool getCardUID(char carduid[]){
     // Select one of the cards
     if (!rfid.PICC_ReadCardSerial()) return false;
 
-    // Show some details of the PICC (that is: the tag/card)
     for (byte i = 0; i < rfid.uid.size; i++) {
         carduid[i*2] = "0123456789ABCDEF"[rfid.uid.uidByte[i]/16];
         carduid[i*2+1] = "0123456789ABCDEF"[rfid.uid.uidByte[i]%16];

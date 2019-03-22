@@ -29,16 +29,29 @@ void connect() {
 
 void messageReceived(String &topic, String &payload) {
 	String debugMessage = "incoming " + payload;
-	//Serial.println(debugMessage);
 	printDebug(debugMessage);
 
-	String topicSSR = String(machine_id) + "/command/ssr";
-		if (topicSSR == topic){
-			if (payload == "1"){
-				activate	= 1; 
+	String topicRef = String(machine_id) + "/command/action";
+		if (topicRef == topic){
+			if (payload == "0"){
+		    activate  = 0;
+			}
+			else if (payload == "1"){
+        lcdPrint("Starting New Session");
+			  activate	= 1;
+			  startMillis = millis();
+			}
+			else if (payload == "2"){
+				lcdPrint("User Not Certified");
+				delay(2500);
+				welcomeScreen();
+			}
+			else if (payload == "3"){
+				lcdPrint("Unknown User    Contact Admin");
+				delay (2500);
+				welcomeScreen(); 
 			}
 		}
-
 }
 
 void setupMQTT() {

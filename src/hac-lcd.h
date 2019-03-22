@@ -7,7 +7,7 @@ void setupLCD() {
     Wire.beginTransmission(0x27);
     int error = Wire.endTransmission();
 
-    if (DEBUG) {
+    if (DEBUG && !LCDDEBUG) {
         Serial.print("Error: "); Serial.println(error);
         if (error == 0) Serial.println(": LCD found.");
         else Serial.println(": LCD not found.");
@@ -35,18 +35,23 @@ void lcdPrint(String s) {
 }
 
 void welcomeScreen(){
-  lcd.setCursor(0, 0); lcd.print("Welcome");
-  lcd.setCursor(0, 1); lcd.print("I'Am Online");
+  lcd.setCursor(0, 0); lcd.print("    Welcome     ");
+  lcd.setCursor(0, 1); lcd.print("   I'm Online   ");
 }
 
 void endScreen(){
-  lcd.setCursor(0, 0); lcd.print("Session Ended");
-  lcd.setCursor(0, 1); lcd.print("Thank You");
+  lcd.setCursor(0, 0); lcd.print(" Session Ended  ");
+  lcd.setCursor(0, 1); lcd.print("   Thank You    ");
 }
 
 void deniedScreen() {
-  lcd.setCursor(0, 0); lcd.print("Access Denied");
-  lcd.setCursor(0, 1); lcd.print("Contact Admin");
+  lcd.setCursor(0, 0); lcd.print(" Access Denied  ");
+  lcd.setCursor(0, 1); lcd.print(" Contact Admin  ");
+}
+
+void unknownCardScreen() {
+    lcd.setCursor(0, 0); lcd.print("    New Card    ");
+    lcd.setCursor(0, 1); lcd.print("    Detected    ");
 }
 
 void certifiedScreen(String timeLeft, String powerMeter) {
