@@ -7,6 +7,10 @@ const bool DEBUG = true;
 const bool LCDDEBUG = true;
 bool activate = 0; // value from cloud to ack SSR pin D8
 unsigned long currentMillis, startMillis, interval = 1800000, previousMillis;
+unsigned long lcdMillis;
+bool lcdBlink = 0; 
+int lcdBacklight = 255;
+
 
 #define MFRC522_SS_PIN  D4
 #define MFRC522_RST_PIN D3
