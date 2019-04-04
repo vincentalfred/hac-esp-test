@@ -7,6 +7,7 @@ void setup() {
 		setupMQTT();
 		setupRFID();
 		setupPZEM();
+		setupSSR();
 }
 
 char cur_carduid[20] = {};
@@ -31,10 +32,14 @@ void loop(){
 			int elapseTime = (currentMillis - startMillis)/60000;
 			int remainingTime = interval/60000 - elapseTime;
 			if (currentMillis - startMillis < interval){
+				float v = pzem.voltage(ip);
+				float i = pzem.current(ip);
+				float p = pzem.power(ip);
 				float e = pzem.energy(ip) - startEnergy;
 				char buffer4[4];
 				String energys = dtostrf(e , 4, 0, buffer4);
 				certifiedScreen(String(remainingTime), energys);
+				//pzemScreen(String(remainingTime), v, i, p, e);
 				if(currentMillis - minuteMillis >= 60000){
 					String topicEnergy = String(machine_id) + "/state/usage";
 					client.publish(topicEnergy, energys);
@@ -49,7 +54,7 @@ void loop(){
 				}
 			}
 
-			int stopButton = digitalRead(D0);
+			int stopButton = digitalRead(BUTTON_PIN);
 			if (currentMillis - startMillis >= interval || stopButton == 1){
 				float e = pzem.energy(ip) - startEnergy;
 				char buffer4[4];
@@ -63,11 +68,25 @@ void loop(){
 				endScreen();
 				delay(2500);
 			}
+			else if (!client.connected()){
+				float e = pzem.energy(ip) - startEnergy;
+				char buffer4[4];
+				String energys = dtostrf(e , 4, 0, buffer4);
+				String topicStop = String(machine_id) + "/state/stop";
+				digitalWrite(SSR_PIN, LOW);
+				connect();
+				client.publish(topicStop, energys);
+				activate = 0;
+				lcdBlink = 0 ;
+				cur_carduid[0] = '\0';
+				connectionLossScreen();
+				delay(2500);
+			}
+
 			if (lcdBlink == 1 && currentMillis - lcdMillis >= 1000){
 				lcdBacklight = 255 - lcdBacklight;
 				lcd.setBacklight(lcdBacklight);
 				lcdMillis = currentMillis;
-
 			}
 		}
 }
