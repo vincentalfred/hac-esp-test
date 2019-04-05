@@ -8,7 +8,7 @@ const bool LCDDEBUG = true;
 bool activate = 0; // value from cloud to ack SSR pin D8
 unsigned long currentMillis, startMillis, minuteMillis, interval = 1800000, previousMillis;
 unsigned long lcdMillis;
-unsigned long raspiMillis = 0, raspiInterval = 1000;
+unsigned long raspiMillis = 0, raspiInterval = 30000;
 bool firstRaspiConnect = 1;
 bool lcdBlink = 0;
 int lcdBacklight = 255;
