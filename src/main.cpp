@@ -17,8 +17,13 @@ void loop(){
 
 		char carduid[20];
 		if (activate == 0) {
-			if (!client.connected()) connectedToRaspi = 0;
-			if (!connectedToRaspi) connect();
+			if (!client.connected()) {
+				connect();
+				connectedToRaspi = 0;
+			}
+			if (!raspiConnected()) {
+				connectionLossScreen();
+			}
 			else {
 				welcomeScreen();
 				if (getCardUID(carduid) && strcmp(carduid, cur_carduid) != 0) {
@@ -27,10 +32,11 @@ void loop(){
 					String topic = String(machine_id) + "/state/carduid";
 					client.publish(topic, carduid);
 				}
+
 			}
 
 		}
-		 else if (activate == 1 ){
+		else if (activate == 1 ){
 			digitalWrite(SSR_PIN, HIGH);
 			currentMillis = millis();
 			int elapseTime = (currentMillis - startMillis)/60000;

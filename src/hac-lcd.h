@@ -49,35 +49,17 @@ void deniedScreen() {
   lcd.setCursor(0, 1); lcd.print(" Contact Admin  ");
 }
 
+void connectionLossScreen() {
+    lcd.setCursor(0, 0); lcd.print("    Uxpected    ");
+    lcd.setCursor(0, 1); lcd.print("Connection Loss ");
+}
+
 void unknownCardScreen() {
     lcd.setCursor(0, 0); lcd.print("    New Card    ");
     lcd.setCursor(0, 1); lcd.print("    Detected    ");
 }
 
 void certifiedScreen(String timeLeft, String powerMeter) {
-  lcd.setCursor(0, 0); lcd.print("TimeLeft: " + timeLeft + "Min");
+  lcd.setCursor(0, 0); lcd.print("TimeLeft:" + timeLeft + "Min");
   lcd.setCursor(0, 1); lcd.print("Energy(Wh):" + powerMeter);
-}
-
-void connectionLossScreen(){
-    lcd.setCursor(0, 0); lcd.print("   Unexpected   ");
-    lcd.setCursor(0, 1); lcd.print(" Connection Loss ");
-}
-
-void pzemScreen(String timeLeft, float v, float i, float p, float e) {
-    char buffer[4];
-    String vs, is, ps, es;
-    sprintf(buffer, "%4.1f", v);
-    vs = String(buffer);
-    sprintf(buffer, "%4.2f", i);
-    is = String(buffer);
-    sprintf(buffer, "%4.1f", p);
-    ps = String(buffer);
-    sprintf(buffer, "%4.0f", e);
-    es = String(buffer);
-
-    String s = timeLeft + " V" + vs + " I" + is;
-    lcd.setCursor(0, 0); lcd.print(s);
-    s = "P" + ps + " E" + es;
-    lcd.setCursor(0, 1); lcd.print(s);
 }

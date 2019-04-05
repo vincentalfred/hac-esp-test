@@ -25,8 +25,38 @@ void connect() {
 	String topic = String(machine_id) + "/command/#";
   	client.subscribe(topic);
 	printDebug("sub to " + topic);
+}
+
+void connectRaspi() {
+	// printDebug("Waiting for Raspi...");
 	String topics = String(machine_id) + "/state/connect";
 	client.publish(topics, "?");
+	raspiResponse = 0;
+	raspiMillis = millis();
+	if (firstRaspiConnect) firstRaspiConnect = 0;
+}
+
+bool raspiConnected() {
+	unsigned long curRaspiMillis = millis();
+	if (firstRaspiConnect) {
+		connectRaspi();
+		return false;
+	}
+	if (!connectedToRaspi) {
+		if (curRaspiMillis-raspiMillis > raspiInterval) connectRaspi();
+		return false;
+	}
+	if (connectedToRaspi){
+		if (curRaspiMillis-raspiMillis > raspiInterval) {
+			if (raspiResponse == 0) {
+				connectedToRaspi = 0;
+				return false;
+			}
+			connectRaspi();
+		}
+		return true;
+	}
+	return false;
 }
 
 void messageReceived(String &topic, String &payload) {
@@ -58,6 +88,7 @@ void messageReceived(String &topic, String &payload) {
 	}
 	topicRef = String(machine_id) + "/command/connect";
 	if (topicRef == topic){
+		raspiResponse = 1;
 		connectedToRaspi = 1;
 	}
 }
