@@ -11,6 +11,7 @@ unsigned long lcdMillis;
 bool lcdBlink = 0;
 int lcdBacklight = 255;
 float startEnergy;
+bool connectedToRaspi = 0;
 
 
 #define MFRC522_SS_PIN  D4

@@ -17,14 +17,18 @@ void loop(){
 
 		char carduid[20];
 		if (activate == 0) {
-			if (!client.connected()) connect();
-			welcomeScreen();
-			if (getCardUID(carduid) && strcmp(carduid, cur_carduid) != 0) {
-				strcpy(cur_carduid, carduid);
-				printDebug(carduid);
-				String topic = String(machine_id) + "/state/carduid";
-				client.publish(topic, carduid);
+			if (!client.connected()) connectedToRaspi = 0;
+			if (!connectedToRaspi) connect();
+			else {
+				welcomeScreen();
+				if (getCardUID(carduid) && strcmp(carduid, cur_carduid) != 0) {
+					strcpy(cur_carduid, carduid);
+					printDebug(carduid);
+					String topic = String(machine_id) + "/state/carduid";
+					client.publish(topic, carduid);
+				}
 			}
+
 		}
 		 else if (activate == 1 ){
 			digitalWrite(SSR_PIN, HIGH);
@@ -68,13 +72,14 @@ void loop(){
 				endScreen();
 				delay(2500);
 			}
-			else if (!client.connected()){
+			if (!client.connected()) connectedToRaspi = 0;
+			if (!connectedToRaspi){
 				float e = pzem.energy(ip) - startEnergy;
 				char buffer4[4];
 				String energys = dtostrf(e , 4, 0, buffer4);
 				String topicStop = String(machine_id) + "/state/stop";
 				digitalWrite(SSR_PIN, LOW);
-				connect();
+				while(!client.connected()) connect();
 				client.publish(topicStop, energys);
 				activate = 0;
 				lcdBlink = 0 ;

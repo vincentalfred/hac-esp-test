@@ -3,7 +3,7 @@
 
 const char* ssid        = "Android AP";
 const char* password    = "abcdefgh";
-const char* mqtt_server = "192.168.3.154";
+const char* mqtt_server = "192.168.3.156";
 const int   mqtt_port   = 1883;
 
 WiFiClient net;
@@ -15,8 +15,9 @@ void connect() {
 		printDebug("...");
 		delay(1000);
 	}
-	printDebug("WiFi connected!");
+	printDebug("WiFi connected!"); delay(1000);
 	while (!client.connect(machine_name)) {
+		printDebug("Connecting to MQTT Broker");
 		delay(1000);
 	}
 
@@ -25,6 +26,8 @@ void connect() {
 	String topic = String(machine_id) + "/command/#";
   	client.subscribe(topic);
 	printDebug("sub to " + topic);
+	String topics = String(machine_id) + "/state/connect";
+	client.publish(topics, "?");
 }
 
 void messageReceived(String &topic, String &payload) {
@@ -53,6 +56,10 @@ void messageReceived(String &topic, String &payload) {
 			delay (2500);
 			welcomeScreen();
 		}
+	}
+	topicRef = String(machine_id) + "/command/connect";
+	if (topicRef == topic){
+		connectedToRaspi = 1;
 	}
 }
 
