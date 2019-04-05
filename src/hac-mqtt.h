@@ -20,8 +20,7 @@ void connect() {
 		printDebug("Connecting to MQTT Broker");
 		delay(1000);
 	}
-
-	printDebug("MQTT connected!");
+	printDebug("MQTT connected!"); delay(1000);
 
 	String topic = String(machine_id) + "/command/#";
   	client.subscribe(topic);
