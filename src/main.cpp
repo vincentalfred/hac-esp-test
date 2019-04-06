@@ -47,8 +47,8 @@ void loop(){
 			float e = pzem.energy(ip) - startEnergy;
 			char buffer4[4];
 			String energys = dtostrf(e , 4, 0, buffer4);
-			certifiedScreen(String(remainingTime), energys);
-			//pzemScreen(String(remainingTime), v, i, p, e);
+			// certifiedScreen(String(remainingTime), energys);
+			pzemScreen(String(remainingTime), v, i, p, e);
 			if(currentMillis - minuteMillis >= 60000){
 				String topicEnergy = String(machine_id) + "/state/usage";
 				client.publish(topicEnergy, energys, false, 2);
