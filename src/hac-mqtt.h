@@ -3,7 +3,9 @@
 
 const char* ssid        = "Android AP";
 const char* password    = "abcdefgh";
-const char* mqtt_server = "192.168.3.154";
+// const char* ssid        = "MasterBulb";
+// const char* password    = "celab123";
+const char* mqtt_server = "192.168.43.215";
 const int   mqtt_port   = 1883;
 
 WiFiClient net;
@@ -15,16 +17,48 @@ void connect() {
 		printDebug("...");
 		delay(1000);
 	}
-	printDebug("WiFi connected!");
+	printDebug("WiFi connected!"); // delay(1000);
 	while (!client.connect(machine_name)) {
+		printDebug("Connecting to MQTT Broker");
 		delay(1000);
 	}
-
-	printDebug("MQTT connected!");
+	printDebug("MQTT connected!"); // delay(1000);
 
 	String topic = String(machine_id) + "/command/#";
   	client.subscribe(topic);
 	printDebug("sub to " + topic);
+}
+
+void connectRaspi() {
+	// printDebug("Waiting for Raspi...");
+	String topics = String(machine_id) + "/state/connect";
+	client.publish(topics, "?", false, 2);
+	raspiResponse = 0;
+	raspiMillis = millis();
+	if (firstRaspiConnect) firstRaspiConnect = 0;
+}
+
+bool raspiConnected() {
+	unsigned long curRaspiMillis = millis();
+	if (firstRaspiConnect) {
+		connectRaspi();
+		return false;
+	}
+	if (!connectedToRaspi) {
+		if (curRaspiMillis-raspiMillis > raspiInterval) connectRaspi();
+		return false;
+	}
+	if (connectedToRaspi){
+		if (curRaspiMillis-raspiMillis > raspiInterval) {
+			if (raspiResponse == 0) {
+				connectedToRaspi = 0;
+				return false;
+			}
+			connectRaspi();
+		}
+		return true;
+	}
+	return false;
 }
 
 void messageReceived(String &topic, String &payload) {
@@ -42,6 +76,9 @@ void messageReceived(String &topic, String &payload) {
 			startMillis = millis();
 			minuteMillis = startMillis;
 			startEnergy = pzem.energy(ip);
+			raspiMillis = millis();
+			raspiResponse = 1;
+			connectedToRaspi = 1;
 		}
 		else if (payload == "2"){
 			deniedScreen();
@@ -53,6 +90,11 @@ void messageReceived(String &topic, String &payload) {
 			delay (2500);
 			welcomeScreen();
 		}
+	}
+	topicRef = String(machine_id) + "/command/connect";
+	if (topicRef == topic){
+		raspiResponse = 1;
+		connectedToRaspi = 1;
 	}
 }
 

@@ -49,12 +49,28 @@ void deniedScreen() {
   lcd.setCursor(0, 1); lcd.print(" Contact Admin  ");
 }
 
+void connectionLossScreen() {
+    lcd.setCursor(0, 0); lcd.print("    Uxpected    ");
+    lcd.setCursor(0, 1); lcd.print("Connection Loss ");
+}
+
 void unknownCardScreen() {
     lcd.setCursor(0, 0); lcd.print("    New Card    ");
     lcd.setCursor(0, 1); lcd.print("    Detected    ");
 }
 
 void certifiedScreen(String timeLeft, String powerMeter) {
-  lcd.setCursor(0, 0); lcd.print("TimeLeft: " + timeLeft + "Min");
+  lcd.setCursor(0, 0); lcd.print("TimeLeft:" + timeLeft + "Min");
   lcd.setCursor(0, 1); lcd.print("Energy(Wh):" + powerMeter);
+}
+
+void pzemScreen(String timeLeft, float v, float i, float p, float e) {
+    char buffer4[4];
+    String voltages = dtostrf(v , 3, 1, buffer4);
+    String currents = dtostrf(i , 2, 2, buffer4);
+    String powers = dtostrf(p , 3, 1, buffer4);
+    String energys = dtostrf(e , 4, 0, buffer4);
+
+    lcd.setCursor(0, 0); lcd.print(timeLeft + " V:" + voltages + " I:" + currents);
+    lcd.setCursor(0, 1); lcd.print("P:" + powers + " E:" + energys);
 }
