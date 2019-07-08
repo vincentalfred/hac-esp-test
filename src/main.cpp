@@ -27,6 +27,8 @@ void loop(){
 		else {
 			welcomeScreen();
 			if (getCardUID(carduid) && strcmp(carduid, cur_carduid) != 0) {
+				readCardMillis = millis();
+				testDataPrinted = 0;
 				strcpy(cur_carduid, carduid);
 				printDebug(carduid);
 				String topic = String(machine_id) + "/state/carduid";
@@ -36,6 +38,13 @@ void loop(){
 
 	}
 	else if (activate == 1 ){
+		if (!testDataPrinted) {
+			activateMillis = millis();
+			testDataPrinted = 1;
+			printTestData();
+			delay(3000);
+			lcd.clear();
+		}
 		digitalWrite(SSR_PIN, HIGH);
 		currentMillis = millis();
 		int elapseTime = (currentMillis - startMillis)/60000;
@@ -63,7 +72,8 @@ void loop(){
 			}
 		}
 
-		int stopButton = digitalRead(BUTTON_PIN);
+		// int stopButton = digitalRead(BUTTON_PIN);
+		int stopButton = 1;
 		if (currentMillis - startMillis >= interval || stopButton == 1){
 			float e = pzem.energy(ip) - startEnergy;
 			char buffer4[4];
@@ -77,28 +87,6 @@ void loop(){
 			endScreen();
 			delay(2500);
 		}
-		/*
-		if (!client.connected()) connectedToRaspi = 0;
-		if (!connectedToRaspi){
-			float e = pzem.energy(ip) - startEnergy;
-			char buffer4[4];
-			String energys = dtostrf(e , 4, 0, buffer4);
-			String topicStop = String(machine_id) + "/state/stop";
-			digitalWrite(SSR_PIN, LOW);
-			while(!client.connected()) connect();
-			client.publish(topicStop, energys);
-			activate = 0;
-			lcdBlink = 0 ;
-			cur_carduid[0] = '\0';
-			connectionLossScreen();
-			delay(2500);
-		}
-		*/
-
-		// if (!client.connected()) {
-		// 	connect();
-		// 	connectedToRaspi = 0;
-		// }
 		if (!raspiConnected()) {
 			float e = pzem.energy(ip) - startEnergy;
 			char buffer4[4];
@@ -118,7 +106,6 @@ void loop(){
 			connectionLossScreen();
 			delay(2500);
 		}
-
 		if (lcdBlink == 1 && currentMillis - lcdMillis >= 1000){
 			lcdBacklight = 255 - lcdBacklight;
 			lcd.setBacklight(lcdBacklight);

@@ -14,6 +14,8 @@ bool lcdBlink = 0;
 int lcdBacklight = 255;
 float startEnergy;
 bool connectedToRaspi = 0, raspiResponse = 0;
+unsigned long readCardMillis, activateMillis;
+bool testDataPrinted = 0;
 
 
 #define MFRC522_SS_PIN  D4
@@ -34,7 +36,17 @@ void printDebug(String debugMessage) {
     if (LCDDEBUG) lcdPrint(debugMessage);
     else Serial.println(debugMessage);
 }
+
 void setupSSR(){
     // pinMode(BUTTON_PIN, INPUT);
     pinMode(SSR_PIN, OUTPUT);
+}
+
+void printTestData() {
+    String s;
+    s = String(readCardMillis) + " " + String(activateMillis);
+    lcd.setCursor(0, 0); lcd.print(s);
+
+    s = String(activateMillis-readCardMillis);
+    lcd.setCursor(0, 1); lcd.print(s);
 }
